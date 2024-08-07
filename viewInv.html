@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+      
+        <title>Inventory</title>
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+      
+        <!-- Favicons -->
+        <link href="assets/img/favicon.png" rel="icon">
+        <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+      
+        <!-- Google Fonts -->
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+      
+        <!-- Vendor CSS Files -->
+        <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+        <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+        <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+        <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+        <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+        <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+      
+        <!-- Template Main CSS File -->
+        <link href="assets/css/style.css" rel="stylesheet">
+      
+      </head>
+<body>
+
+<header id="header" class="header fixed-top d-flex align-items-center justify-content-center">
+    <div>
+        <a href="index.html" class="d-flex align-items-center">
+            <span class="d-none d-lg-block">Bhumi</span>
+        </a>
+    </div><!-- End Logo -->
+</header><!-- End Header -->
+
+<main id="main" class="main">
+
+<div class="pagetitle">
+    <h1 class="pagetitle-title text-center">Inventory Items</h1>
+</div><!-- End Page Title -->
+
+<div class="container">
+  <input type="text" id="search-input" placeholder="Search inventory...">
+  <ul id="inventory-list" class="list"></ul>
+  <div id="pagination-buttons" class="pagination">
+    <button id="prev-btn" class="btn" disabled>&lt; Prev</button>
+    <button id="next-btn" class="btn">Next &gt;</button>
+  </div>
+</div>
+
+</main><!-- End Main -->
+
+<!-- Footer -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Bhumi</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  
+  /* Adjust the position of the search bar */
+  #search-input {
+    margin-left: auto; /* Move the search bar to the right */
+    padding: 8px 10px; /* Adjust padding */
+    border: 1px solid #ccc; /* Add border for better visibility */
+    border-radius: 4px; /* Add border-radius for rounded corners */
+    background-size: 20px; /* Set the size of the search icon */
+    background-repeat: no-repeat; /* Prevent the search icon from repeating */
+    background-position: 95% center; /* Position the search icon to the right */
+  }
+  
+  /* Set the width of the search bar */
+  #search-input {
+    width: 200px; /* Adjust the width as needed */
+  }
+  
+  /* Style the search icon */
+  #search-input::placeholder {
+    color: #aaa; /* Set placeholder color */
+  }
+  
+  
+  h1 {
+    text-align: center;
+  }
+  
+  .list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .list li {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    margin: 0 5px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  </style>
+
+<script>
+
+async function fetchInventory() {
+  try {
+    const response = await fetch('/inventory');
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to fetch inventory:', error);
+    return [];
+  }
+}
+
+// Similar display and pagination logic, adapted for inventory items
+function displayInventory(page = 1, searchQuery = '') {
+  const inventoryList = document.getElementById('inventory-list');
+  fetchInventory().then(inventoryItems => {
+    const perPage = 3;
+    const startIndex = (page - 1) * perPage;
+    const endIndex = startIndex + perPage;
+
+    const filteredItems = inventoryItems.filter(item =>
+      item.iname.toLowerCase().includes(searchQuery.toLowerCase())
+      // Add more filters if needed
+    );
+
+    inventoryList.innerHTML = '';
+    filteredItems.slice(startIndex, endIndex).forEach(item => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `
+      <div class="item-details">
+        <div>
+          <p class="item-name">${item.iname}</p>
+          <p class="item-quantity">Quantity: ${item.iquantity}</p>
+          <p class="item-price">Price: $${item.cost}</p>
+        </div>
+      </div>
+    `;
+      inventoryList.appendChild(listItem);
+    });
+
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    prevBtn.disabled = page === 1;
+    nextBtn.disabled = endIndex >= filteredItems.length;
+  });
+}
+
+    // Function to handle pagination
+    function handlePagination() {
+      let currentPage = 1;
+      const searchInput = document.getElementById('search-input');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+
+      // Display initial inventory
+      displayInventory(currentPage);
+
+      // Event listener for search input
+      searchInput.addEventListener('input', () => {
+        const searchQuery = searchInput.value.trim();
+        displayInventory(1, searchQuery);
+        currentPage = 1; // Reset to the first page
+      });
+
+      // Event listener for next button
+      nextBtn.addEventListener('click', () => {
+        const searchQuery = searchInput.value.trim();
+        currentPage++;
+        displayInventory(currentPage, searchQuery);
+      });
+
+      // Event listener for prev button
+      prevBtn.addEventListener('click', () => {
+        const searchQuery = searchInput.value.trim();
+        currentPage--;
+        displayInventory(currentPage, searchQuery);
+      });
+    }
+
+    // Call the function to handle pagination when the page loads
+    window.onload = handlePagination;
+  </script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

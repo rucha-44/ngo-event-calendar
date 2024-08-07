@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <style>
+    /* Custom CSS to center the headings */
+    .form-heading {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    body {
+      margin: 170px; /* Set margin for the body */
+      background-color: rgb(208, 243, 208); /* Change the background color to green */
+    }
+
+    .btn-submit:hover {
+      background-color: #2bcf5c; /* Change background color on hover */
+      color: rgb(255, 255, 255); /* Change text color on hover */
+    }
+  
+  </style>
+</head>
+<body>
+  <header id="header" class="header fixed-top d-flex align-items-center justify-content-center">
+    <div>
+      <a href="index.html" class="logo d-flex align-items-center">
+          <span class="d-none d-lg-block">Bhumi</span>
+      </a>
+    </div>
+  </header>
+  <main id="main" class="main">
+    <section class="section">
+      <div class="row justify-content-center">
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <!-- <div id="loginForm"> -->
+                <h2 class = "form-heading">Login</h2>
+                <form id = "loginForm" method="post">
+                  <div class="input-box">
+                    <span class="icon">
+                      <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <input id = "emailip" type="email" name="email" required>
+                    <label>Email</label>
+                  </div>
+                  <div class="input-box">
+                    <span class="icon">
+                      <i class="fa-solid fa-lock"></i>
+                    </span>
+                    <input id = "passid" type="password" name="password" required>
+                    <label>Password</label>
+                  </div>
+                  <div class="remember-forgot">
+                    <label><input type="checkbox">Remember me</label>
+                    <a href="#">Forgot password?</a>
+                  </div>
+                  <button id="submitbtn" class="btn btn-submit" name="Login">Login</button>
+                  <div class="login-register">
+                    <p>Don't have an account? <a href="registration.html" class="register-link">Register</a></p>
+                </div>
+                </form>
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    // Get references to the login and register forms
+    document.addEventListener("DOMContentLoaded", function() {
+      const submitBtn = document.getElementById('submitbtn')
+      
+      const baseURL = 'http://localhost:8080/'
+
+      submitBtn.addEventListener('click', getlogin)
+
+      async function getlogin(e) {
+        e.preventDefault()
+
+        const emailIp = document.getElementById('emailip').value
+        const passIp = document.getElementById('passid').value
+        
+        const reqBody = {
+          username: emailIp,
+          pass: passIp
+        }
+        const res = await fetch('/login', {
+          method : 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(reqBody) 
+        })
+
+        if(res.ok) {
+          const data = await res.json();
+          if (data.redirect) {
+            console.log('redirecting..')
+            window.location.href = data.redirect;
+          } else {
+            alert(data.message)
+          }
+        }
+        else {
+          alert('Could not redirect')
+        }
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Registration</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <style>
+    /* Custom CSS to center the headings */
+    .form-heading {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    body {
+      margin: 170px; /* Set margin for the body */
+      background-color: rgb(208, 243, 208); /* Background color */
+    }
+
+    .btn-submit:hover {
+      background-color: #2bcf5c; /* Change background color on hover */
+      color: rgb(255, 255, 255); /* Change text color on hover */
+    }
+  
+  </style>
+</head>
+<body>
+  <header id="header" class="header fixed-top d-flex align-items-center justify-content-center">
+    <div>
+      <a href="index.html" class="logo d-flex align-items-center">
+          <span class="d-none d-lg-block">Bhumi</span>
+      </a>
+    </div>
+  </header>
+  <main id="main" class="main">
+    <section class="section">
+      <div class="row justify-content-center">
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="form-heading">Register</h2>
+              <form id="registerForm" method="post">
+                <div class="input-box">
+                  <span class="icon">
+                    <i class="fa-solid fa-envelope"></i>
+                  </span>
+                  <input id="emailInput" type="email" name="email" required>
+                  <label>Email</label>
+                </div>
+                <div class="input-box">
+                  <span class="icon">
+                    <i class="fa-solid fa-lock"></i>
+                  </span>
+                  <input id="passwordInput" type="password" name="password" required>
+                  <label>Password</label>
+                </div>
+                <button id="registerBtn" class="btn btn-submit" name="Register">Register</button>
+                <div class="login-register">
+                  <p>Already have an account? <a href="login.html" class="login-link">Login</a></p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    // JavaScript for the registration form submission
+    document.addEventListener("DOMContentLoaded", function() {
+      const registerBtn = document.getElementById('registerBtn');
+      
+      const baseURL = 'http://localhost:8080/';
+
+      registerBtn.addEventListener('click', registerUser);
+
+      async function registerUser(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passwordInput').value;
+        
+        const reqBody = {
+          email: email,
+          password: password
+        };
+
+        const res = await fetch('/registeration', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(reqBody)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.redirect) {
+            console.log('redirecting..');
+            window.location.href = data.redirect;
+          } else {
+            alert(data.message);
+          }
+        } else {
+          alert('Registration failed');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

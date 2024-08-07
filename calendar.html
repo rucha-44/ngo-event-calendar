@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Calendar</title>
+  <style>
+    body {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f5f5f5; /* Light gray background */
+  padding: 10px 10px;
+    overflow-y: hidden;
+}
+
+.calendar-container {
+  text-align: center;
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 20px; /* Inner padding */
+  background-color: #fff; /* White background */
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  width: 100%; /* Responsive width */
+  max-width: 900px; /* Set a maximum width for larger screens */
+  margin: 0 auto; /* Center the container horizontally */
+}
+
+h1 {
+  margin-bottom: 20px; /* Spacing for title */
+  font-family: Arial, sans-serif; /* Similar font to Google Calendar */
+}
+
+iframe {
+  border: none; /* Remove default iframe border */
+  min-height: 600px; /* Set a minimum height for responsiveness */
+}
+
+@media only screen and (max-width: 768px) {
+  /* Styles for smaller screens */
+  .calendar-container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.2em; /* Adjust font size for smaller screens */
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="calendar-container">
+    <h1>Get ready to catch all the latest event scoop right here!</h1>
+    <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=UTC&bgcolor=%23B39DDB&src=NjdhYTBlYWEwODdjMWJiZjI3MWVmZmUyMzA5YzA5Y2RlMzZjYTg0NDA1MWFhYzhkMGY5NDUxNmEzNWUyYWI1N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23B39DDB" width="900" height="600"></iframe>
+  </div>
+</body>
+</html>
